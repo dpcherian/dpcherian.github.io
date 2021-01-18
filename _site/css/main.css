@@ -74,3 +74,49 @@ ul.posts li {
 .cv .download { float: right; font-size: .8em; text-transform: uppercase; }
 
 .last_updated {float: right; color: grey}
+
+.inst {font-size: normal; font-family: 'Helvetica', 'Arial', 'Sans-Serif';}
+
+/* TEACHING */
+
+.teaching { margin: 0px 0px 60px; }
+.teaching p {font-size: 1em;}
+.teaching h2 { font-size: 1.5em; }
+.teaching h3 { font-size: 1em; }
+.teaching .download { float: right; font-size: .8em; text-transform: uppercase; }
+
+.teaching .course {  padding-bottom: 2px; color: #333; font-family: 'Helvetica', 'Arial', 'Sans-Serif'; }
+.teaching .course ul { list-style-type: none; }
+.high {color: #B22222}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+.ds {
+  text-align: left;
+  font-size:90%;
+/*  height: 500px;*/
+}
+
+.assign {
+  text-align: left;
+  font-size: 90%;
+/*  height: 500px;*/
+}
+
+ul#inline li{
+    display:inline;
+    padding: 1em;
+}
+
