@@ -1,0 +1,157 @@
+---
+layout: default
+title: "PHY1010: Line of Best Fit"
+last_modified_date: Jan 22, 2023
+---
+
+<head>
+<title>PHY1010: Line of Best Fit</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<style></style>
+</head>
+
+<body>
+<!-- MathCell -->
+<script src="https://paulmasson.github.io/mathcell/build/mathcell.js"></script>
+<!-- MathJax -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<div id="outer">
+<div id="left">
+<h3>Choosing the line of best fit</h3>
+<ul>
+<li>Drag the sliders or move them with the arrow buttons to choose the slope and intercept of the red line so that it is an aesthetic fit.</li>
+<li> The applet is preloaded with some dummy data that you can use. </li>
+<li> You can also upload your own data or enter it into the box on the right. Your input data should be in the form of a csv file with only two columns. </li>
+<li> The sum of squared deviations \(S = \sum_{i=1}^N (y_i - y)^2\) is also shown.</li>
+</div>
+
+<div class="input-box" id="right">
+<center>
+ <label for="input-file">Enter your own data:</label><br/><br/>
+ <input type="file" id="input-file"/>
+ <textarea id="content-target"></textarea><br/><br/><br/>
+ <button class="button-9" role="button" onclick = "test()">Update plot</button> 
+</center>
+</div>
+</div>
+
+<p style= "text-align:center; line-height: 2" id='residue'><span style="font-size:15pt">Residue:</span></p>
+
+<script>
+
+// In the variable 'l', you insert a 2D array of pointa [[x,y]] that will be plotted.
+var l  = [[1,5.38309],[2,9.701134],[3,13.63343],[4,14.79501],[5,19.26441],[6,20.71318],[7,24.23409],[8,26.55938],[9,29.07959],[10,34.50924]]
+
+</script>
+
+<div class="mathcell" style="height: 4in">
+<script>
+
+var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
+
+var id = generateId();
+parent.id = id;
+
+MathCell( id, [ { type: 'slider', min: 0, max: 2*Math.PI,
+                                name: 'slope', label: 'slope' },{ type: 'slider', min: 0, max: 2*Math.PI,
+                                name: 'intercept', label: 'intercept' } ] );
+
+
+parent.update = function( id ) {
+
+  var slope = +document.getElementById( id + 'slope' ).value;
+  var intercept = +document.getElementById( id + 'intercept' ).value;
+  
+document.getElementById('input-file')
+  .addEventListener('change', getFile)
+
+function getFile(event) {
+	const input = event.target
+  if ('files' in input && input.files.length > 0) {
+	  placeFileContent(
+      document.getElementById('content-target'),
+      input.files[0])
+  }
+}
+
+function placeFileContent(target, file) {
+	readFileContent(file).then(content => {
+  	target.value = content
+  }).catch(error => console.log(error))
+}
+
+function readFileContent(file) {
+	const reader = new FileReader()
+  return new Promise((resolve, reject) => {
+    reader.onload = event => resolve(event.target.result)
+    reader.onerror = error => reject(error)
+    reader.readAsText(file)
+  })
+}
+
+  // Plotting the trendline with the slope and intercept from the sliders. the minMax function finds the maximum x value to plot the trendline up to.
+  var p = plot( x => slope*x + intercept, [0, minMax(l,0).max ], { color: 'rgb(255,99,71)' } );
+
+  // The data array is what is shown on the screen.
+  var data = [p];
+  
+  var i = 0;
+  // Plotting all the points (pushing them to the data array.
+  while(i<l.length){
+    data.push(point( l[i]));
+    i=i+1;
+  }
+
+
+  var config = { type: 'svg' };
+
+  // Calculating the residue using residue = sum{ (y0- y_trend)^2}
+  var i = 0;
+
+  var residue = 0;
+
+  while(i<l.length){
+  residue = residue + (l[i][1]-(slope*l[i][0]+intercept))**2;
+  i=i+1;
+  }  
+  residue = roundTo(residue,5)
+
+
+  document.getElementById('residue').innerHTML = '<b>Sum of squared deviations:  </b>'+ residue;
+
+  evaluate( id, data, config );
+
+}
+
+parent.update( id );
+
+function test(){
+    var content = document.getElementById("content-target").value;
+    var lines = content.split("\n");
+//    alert(lines.length);
+    
+    var i = 0;
+    var point_data = [];
+
+    while(i<lines.length){
+        var this_line = lines[i];
+        if(this_line.length>0){
+            this_point = this_line.split(",").map(parseFloat);
+            point_data.push(this_point);
+        }
+        i = i+1;
+    }
+    l = point_data;
+    console.log(l);
+    parent.update(id);
+}
+
+
+</script>
+
+</div>
+
+
+</body>
+
