@@ -1,2 +1,4 @@
 _stage/
 _site/
+
+.DS_Store
